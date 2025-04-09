@@ -47,3 +47,7 @@ data:
  - raw
 
 Aquí deben de estar las imagenes, en el raw deben de estar las imagenes originales, en el processed ahí se arroja imaganes creadas por un archivo aparte.
+
+especie_01: 5. Alnus incana: 71 MB 
+especie_02: 1. Ulmus carpinifolia : 240 MB
+especie_03: 3. Salix aurita: 227 MB
