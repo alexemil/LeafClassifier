@@ -1,7 +1,7 @@
 # LeafClassifier
 Enlace a las imagenes que se ocuparon para realizar este proyecto se pueden encontrar en el siguiente enlace:
 
-https://drive.google.com/drive/folders/1OmdU1bjInQ3KxQaxz0eUymSVZuGNjNyp?usp=sharing
+https://drive.google.com/drive/folders/1ZrBdvb0vbMDF5_p6juCWQdZx8pWK5KJc?usp=sharing
 
 Las imagenes originales se tomaron de la sigueinte pagina:
 https://www.cvl.isy.liu.se/en/research/datasets/swedish-leaf/
@@ -48,6 +48,6 @@ data:
 
 Aquí deben de estar las imagenes, en el raw deben de estar las imagenes originales, en el processed ahí se arroja imaganes creadas por un archivo aparte.
 
-especie_01: 5. Alnus incana: 71 MB 
-especie_02: 1. Ulmus carpinifolia : 240 MB
-especie_03: 3. Salix aurita: 227 MB
+- especie_01: 5. Alnus incana: 71 MB 
+- especie_02: 1. Ulmus carpinifolia : 240 MB
+- especie_03: 3. Salix aurita: 227 MB
