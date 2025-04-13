@@ -14,33 +14,93 @@ import seaborn as sns
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Rutas
-FEATURES_PATH = Path("data/processed/leaf_features.csv")
-MODEL_PATH = Path("models/leaf_classifier.pkl")
-PLOTS_DIR = Path("reports/figures/")
+# Agrega esto al inicio del archivo
+PROJECT_ROOT = Path(__file__).resolve().parents[2]  # Subimos dos niveles desde src/classifiers/
+FEATURES_PATH = PROJECT_ROOT / "data/processed/leaf_features.csv"
+MODEL_PATH = PROJECT_ROOT / "models/leaf_classifier.pkl"
+PLOTS_DIR = PROJECT_ROOT / "reports/figures"
 
 def load_data(features_path: Path) -> tuple:
-    """Carga y prepara los datos."""
+    """Carga y prepara los datos con validaciones mejoradas.
+    
+    Args:
+        features_path: Ruta al archivo CSV con features
+        
+    Returns:
+        tuple: (DataFrame con features, LabelEncoder ajustado)
+        
+    Raises:
+        ValueError: Si hay problemas con los datos
+    """
     try:
+        # Cargar datos con verificación de existencia
+        if not features_path.exists():
+            raise FileNotFoundError(f"Archivo no encontrado: {features_path}")
+            
         df = pd.read_csv(features_path)
         
-        # Verifica columnas esenciales
-        required_cols = ["area", "perimeter", "solidity", "image_name"]
-        if not all(col in df.columns for col in required_cols):
-            raise ValueError(f"El CSV debe contener las columnas: {required_cols}")
+        # Columnas requeridas (actualizadas con nuevas features)
+        required_cols = [
+            "area", 
+            "perimeter", 
+            "solidity",
+            "aspect_ratio",
+            "rectangularity",
+            "hu_moment1",
+            "hu_moment2",
+            "texture_mean",
+            "species"  # Ahora requerimos explícitamente la columna de especies
+        ]
         
-        # Codifica etiquetas (si no están numéricas)
-        if "species" not in df.columns:
-            logger.warning("Columna 'species' no encontrada. Usando 'especie_01' como default.")
-            df["species"] = "especie_01"
+        # Verificar columnas faltantes
+        missing_cols = [col for col in required_cols if col not in df.columns]
+        if missing_cols:
+            raise ValueError(
+                f"Faltan columnas esenciales: {missing_cols}\n"
+                f"Columnas encontradas: {df.columns.tolist()}"
+            )
         
+        # Manejo de valores nulos
+        if df.isnull().any().any():
+            null_counts = df.isnull().sum()
+            logger.warning(
+                f"Valores nulos encontrados:\n{null_counts[null_counts > 0]}\n"
+                "Rellenando con medianas por especie."
+            )
+            
+            # Rellenar nulos con la mediana por especie
+            for col in df.select_dtypes(include=np.number).columns:
+                df[col] = df.groupby('species')[col].transform(
+                    lambda x: x.fillna(x.median())
+                )
+        
+        # Validación de distribución de clases
+        species_counts = df['species'].value_counts()
+        logger.info(f"Distribución de especies:\n{species_counts}")
+        
+        if len(species_counts) < 2:
+            raise ValueError(
+                "Se requiere al menos 2 especies distintas. "
+                f"Encontradas: {species_counts.index.tolist()}"
+            )
+        
+        # Codificación de etiquetas
         le = LabelEncoder()
         df["species_encoded"] = le.fit_transform(df["species"])
         
+        # Normalización de características (excepto species_encoded)
+        numeric_cols = [col for col in df.columns if col not in ['species', 'species_encoded', 'image_name']]
+        df[numeric_cols] = (df[numeric_cols] - df[numeric_cols].mean()) / df[numeric_cols].std()
+        
+        # Validación final
+        if df.empty:
+            raise ValueError("El DataFrame resultante está vacío después del procesamiento")
+            
         return df, le
+        
     except Exception as e:
-        logger.error(f"Error al cargar datos: {e}")
-        raise
+        logger.error(f"Error crítico al cargar datos: {str(e)}")
+        raise ValueError(f"No se pudieron cargar los datos: {str(e)}") from e
 
 def train_model(X: np.ndarray, y: np.ndarray) -> RandomForestClassifier:
     """Entrena un modelo con mejor manejo de clases desbalanceadas"""
@@ -119,6 +179,25 @@ def main():
         logger.info(f"F1-score (weighted): {f1_score(y_test, y_pred, average='weighted'):.2f}")
         logger.info("\n" + classification_report(y_test, y_pred, target_names=label_encoder.classes_))
         
+        report_dict = classification_report(
+            y_test,
+            y_pred,
+            target_names=label_encoder.classes_,
+            output_dict=True  # <- Esto es lo que lo transforma a diccionario
+        )
+        
+        # Lo conviertes en un DataFrame y lo guardas
+        report_df = pd.DataFrame(report_dict).transpose()
+        
+        # Opcional: redondear los valores
+        report_df[["precision", "recall", "f1-score"]] = report_df[["precision", "recall", "f1-score"]].round(2)
+        
+        # Guardarlo como CSV
+        report_df.to_csv(PLOTS_DIR / "classification_report.csv")
+        
+        # Mostrar en consola
+        print("\n=== Clasificación por clase ===")
+        print(report_df)
         # Guarda artefactos
         logger.info(f"✅ Modelo guardado en {MODEL_PATH}")
         

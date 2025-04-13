@@ -2,9 +2,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
+import os
 
 def run_eda(features_path: Path, plots_dir: Path) -> None:
     """Genera gráficos exploratorios y estadísticas."""
+    if not features_path.exists():
+        raise FileNotFoundError(f"El archivo {features_path} no existe.")
     df = pd.read_csv(features_path)
     
     # 1. Gráfico de distribución de características
@@ -33,9 +36,13 @@ def run_eda(features_path: Path, plots_dir: Path) -> None:
         plt.close()
 
 if __name__ == "__main__":
-    features_path = Path("data/processed/leaf_features.csv")
+    plots_dir = Path("reports/figures")
+    plots_dir.mkdir(parents=True, exist_ok=True)
+    if not os.access(plots_dir, os.W_OK):
+        raise PermissionError(f"No tienes permisos de escritura en {plots_dir}.")
     plots_dir = Path("reports/figures")
     plots_dir.mkdir(exist_ok=True)
     
+    features_path = Path("data/features.csv")  # Define the path to the features file
     run_eda(features_path, plots_dir)
     print("✅ Análisis guardado en 'reports/figures/'")

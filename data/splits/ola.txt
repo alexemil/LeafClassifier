@@ -1,0 +1,8 @@
+🔍 Resultado:
+Especie: <b>especie_02</b>
+Confianza: <b>78.6%</b>
+
+📊 Probabilidades:
+• especie_01: 2.2%
+• especie_02: 78.6%
+• especie_03: 19.2%
