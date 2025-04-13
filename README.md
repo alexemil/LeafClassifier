@@ -23,7 +23,20 @@ LeafClassifier/ │ ├── data/ │ ├── raw/ # Imágenes originales �
 
 ## 💻 Instalación
 
-Requisitos: **Python 3.10 o superior**
+Requisitos: **Python 3.10 o superior** 
+
+ATENCIÓN! Las imagenes del Dataset que se ocupo para desarrollar esta practica no estarán en el proyecto, para mejor comodidad ingresa al siguiente Enlace:
+
+Enlace: https://drive.google.com/drive/u/0/folders/1OmdU1bjInQ3KxQaxz0eUymSVZuGNjNyp
+
+Especies por nombre cientifico:
+
+especie_01: Alnus incana
+especie_02: Ulmus carpinifolia 
+especie_03: Salix aurita
+Cordia boissieri
+Quercus virginiana
+Vachellia farnesiana
 
 ### 1. Clonar el repositorio
 
@@ -64,4 +77,3 @@ Desde la GUI podrás:
     Obtener la predicción de la especie.
 
     Consultar los valores de las características extraídas.
-
