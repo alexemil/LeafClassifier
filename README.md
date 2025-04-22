@@ -31,12 +31,12 @@ Enlace: https://drive.google.com/drive/u/0/folders/1OmdU1bjInQ3KxQaxz0eUymSVZuGN
 
 Especies por nombre cientifico:
 
-especie_01: Alnus incana
-especie_02: Ulmus carpinifolia 
-especie_03: Salix aurita
-Cordia boissieri
-Quercus virginiana
-Vachellia farnesiana
+    "especie_01": "Aliso blanco",
+    "especie_02": "Olmo europeo",
+    "especie_03": "Sauce gris",
+    "Cordia boissieri": "Anacahuita",
+    "Quercus virginiana": "Encino siempre verde",
+    "Vachellia farnesiana": "Huizache"
 
 ### 1. Clonar el repositorio
 
@@ -77,3 +77,23 @@ Desde la GUI podrás:
     Obtener la predicción de la especie.
 
     Consultar los valores de las características extraídas.
+
+Poner los nombres comunes
+Revisar porque el codigo esta tardando tanto
+Revisar el modelo
+
+#### Nuevos cambios en el repositorio
+
+-- Cambie los nombres de las plantas ejemplares por los nombres comunes
+
+### Revisar los siguientes archivos
+
+- shape_features.py
+- train_tensorflow_model.py
+- main.py
+
+### Cambios significativos
+
+1. Se cambio el nombre de las hojas por el nombre cientifico
+2. Las metricaz o las imagenes de las graficas se actualizaron de acuerdo a los nombres de las hojas por el nombre común
+3. En el main se actualizo la interfaz por una más detallada, se agregaron los valores en una tabla, se hicieron mejoras y ahora se ven los nombres de las por los nombres comunes.

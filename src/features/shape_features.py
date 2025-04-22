@@ -134,12 +134,12 @@ def process_batch_images(input_dir: Path, output_dir: Path, pattern: str, specie
 if __name__ == "__main__":
     # Configuración de especies y patrones
     species_config = [
-        ("especie_01", "l5nr*.png"),
-        ("especie_02", "l1nr*.png"), 
-        ("especie_03", "l3nr*.png"),    
-        ("Cordia_boissieri", "Cordia_boissieri_*.png"),
-        ("Quercus_virginiana", "Quercus_virginiana_*.png"),
-        ("Vachellia_farnesiana", "vachellia_*.png")
+        ("Aliso", "l5nr*.png"),
+        ("Olmo", "l1nr*.png"), 
+        ("Sauce", "l3nr*.png"),    
+        ("Anacahuita", "Cordia_boissieri_*.png"),
+        ("Encino", "Quercus_virginiana_*.png"),
+        ("Huisache", "vachellia_*.png")
     ]
     
     all_features = []
